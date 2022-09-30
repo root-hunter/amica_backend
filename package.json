@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "kill": "sudo kill -9 `sudo lsof -t -i:9001`",
+    "kill": "sudo kill -9 `sudo lsof -t -i:8000`",
     "doc": "npx typedoc",
     "migrate": "npx prisma migrate dev",
     "build": "npx tsc",
