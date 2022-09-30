@@ -1,0 +1,7 @@
+{
+    "entryPoints": ["src", "node_modules/.prisma/client/"],
+    "entryPointStrategy": "expand",
+    "out": "docs",
+    "plugin": ["typedoc-theme-hierarchy"],
+    "theme": "hierarchy"
+}

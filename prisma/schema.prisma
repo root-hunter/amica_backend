@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./db.sqlite"
+}
+
+model Paziente {
+  id              String      @id @default(uuid())
+  codiceFiscale   String   @unique
+  nome            String
+  cognome         String
+  dataNascita     DateTime
+  ms              Int
+  gradoIstruzione String
+
+  lavoro String?
+
+  patologie PatologiaPaziente[]
+  farmaci   FarmacoPaziente[]
+  esercizi  EsercizoPaziente[]
+
+  createdAt DateTime @default(now())
+}
+
+model Terapista {
+  id              String      @id @default(uuid())
+  codiceFiscale String @unique
+  nome          String
+  cognome       String
+  specialistica String
+
+  createdAt DateTime @default(now())
+}
+
+model CategoriaEsercizio {
+  id              String      @id @default(uuid())
+  nome       String
+  descrizione String?
+  esercizi   Esercizio[]
+
+  createdAt DateTime @default(now())
+}
+
+model Esercizio {
+  id              String      @id @default(uuid())
+  categoriaEsercizioId String
+  categoriaEsercizio   CategoriaEsercizio @relation(fields: [categoriaEsercizioId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  pazienti             EsercizoPaziente[]
+  createdAt DateTime @default(now())
+}
+
+model EsercizoPaziente {
+  pazienteId String
+  paziente   Paziente @relation(fields: [pazienteId], references: [id])
+
+  esercizioId String
+  esercizio   Esercizio @relation(fields: [esercizioId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([pazienteId, esercizioId])
+}
+
+model PatologiaPaziente {
+  pazienteId String
+  paziente   Paziente @relation(fields: [pazienteId], references: [id])
+
+  patologiaId String
+  patologia   Patologia @relation(fields: [patologiaId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([pazienteId, patologiaId])
+}
+
+model Patologia {
+  id              String      @id @default(uuid())
+  nome       String
+  descrizione String?
+
+  pazienti PatologiaPaziente[]
+
+  createdAt DateTime @default(now())
+}
+
+model Farmaco {
+  id              String      @id @default(uuid())
+  nome               String
+  descrizione         String?
+  effettiCollaterali String?
+
+  pazienti FarmacoPaziente[]
+
+    createdAt DateTime @default(now())
+
+}
+
+model FarmacoPaziente {
+  pazienteId String
+  paziente   Paziente @relation(fields: [pazienteId], references: [id])
+
+  farmacoId String
+  farmaco   Farmaco @relation(fields: [farmacoId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([pazienteId, farmacoId])
+}
